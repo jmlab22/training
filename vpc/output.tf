@@ -17,3 +17,8 @@ output "Internet-Gateway" {
   description = "My Internet Gateway"
   value       = "${aws_internet_gateway.gw.id}"
 }
+
+output "route_table" {
+  description = "My Route Table"
+  value       = "${aws_route_table.rt.id}"
+}
