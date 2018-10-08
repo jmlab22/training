@@ -12,3 +12,8 @@ output "private_subnet_a" {
   description = "Private subnet A"
   value       = "${aws_subnet.mysubnet-a.cidr_block}"
 }
+
+output "Internet-Gateway" {
+  description = "My Internet Gateway"
+  value       = "${aws_internet_gateway.gw.id}"
+}
