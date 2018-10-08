@@ -40,3 +40,8 @@ resource "aws_route_table" "rt" {
     Name = "My_route_table"
   }
 }
+
+resource "aws_route_table_association" "my_rt_assoc" {
+  subnet_id      = "${aws_subnet.mysubnet-a.id}"
+  route_table_id = "${aws_route_table.rt.id}"
+}
