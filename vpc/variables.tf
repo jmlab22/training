@@ -4,6 +4,12 @@ variable "vpc_cidr_block" {
   default     = "172.23.0.0/16"
 }
 
+variable "default_cidr_block" {
+  description = "ANY CIDR block"
+  type        = "string"
+  default     = "0.0.0.0/0"
+}
+
 variable "region" {
   description = "My preferred region"
   type        = "string"
