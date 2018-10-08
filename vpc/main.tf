@@ -9,3 +9,12 @@ resource "aws_vpc" "main" {
     Name = "main"
   }
 }
+
+resource "aws_subnet" "mysubnet-a" {
+  vpc_id     = "${aws_vpc.main.id}"
+  cidr_block = "172.23.1.0/24"
+
+  tags {
+    Name = "mysubnet-a"
+  }
+}
