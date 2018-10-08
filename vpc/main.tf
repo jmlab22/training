@@ -52,6 +52,6 @@ resource "aws_s3_bucket" "my-bucket-tfstate" {
 
   tags {
     Name        = "My bucket tfsate"
-    Environment = "Dev"
+    Environment = "Training"
   }
 }
