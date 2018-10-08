@@ -1,9 +1,9 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = "${var.region}"
 }
 
 resource "aws_vpc" "main" {
-  cidr_block = "172.23.0.0/16"
+  cidr_block = "${var.vpc_cidr_block}"
 
   tags {
     Name = "main"
@@ -12,7 +12,7 @@ resource "aws_vpc" "main" {
 
 resource "aws_subnet" "mysubnet-a" {
   vpc_id            = "${aws_vpc.main.id}"
-  cidr_block        = "172.23.1.0/24"
+  cidr_block        = "${var.private_subnet_a}"
   availability_zone = "eu-west-1a"
 
   tags {
@@ -44,4 +44,14 @@ resource "aws_route_table" "rt" {
 resource "aws_route_table_association" "my_rt_assoc" {
   subnet_id      = "${aws_subnet.mysubnet-a.id}"
   route_table_id = "${aws_route_table.rt.id}"
+}
+
+resource "aws_s3_bucket" "my-bucket-tfstate" {
+  bucket = "my-bucket-tfstate"
+  acl    = "private"
+
+  tags {
+    Name        = "My bucket tfsate"
+    Environment = "Dev"
+  }
 }

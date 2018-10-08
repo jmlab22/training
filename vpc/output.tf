@@ -22,3 +22,8 @@ output "route_table" {
   description = "My Route Table"
   value       = "${aws_route_table.rt.id}"
 }
+
+output "my-bucket-tfstate" {
+  description = "My Bucket TFSTATE"
+  value       = "${aws_s3_bucket.my-bucket-tfstate.arn}"
+}
