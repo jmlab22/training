@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "${var.region}"
+  region = "eu-west-1"
 }
 
 resource "aws_vpc" "main" {
@@ -10,14 +10,16 @@ resource "aws_vpc" "main" {
   }
 }
 
-resource "aws_subnet" "mysubnet-a" {
+resource "aws_subnet" "mysubnet" {
+  count             = "${length(var.myAZ)}"
   vpc_id            = "${aws_vpc.main.id}"
-  cidr_block        = "${var.private_subnet_a}"
-  availability_zone = "eu-west-1a"
+  cidr_block        = "${element(var.private_subnet,count.index)}"
+  availability_zone = "${element(var.myAZ,count.index)}"
 
   tags {
-    Name = "mysubnet-a"
+    Name = "mysubnet.${count.index}"
   }
+  
 }
 
 resource "aws_internet_gateway" "gw" {
@@ -42,7 +44,9 @@ resource "aws_route_table" "rt" {
 }
 
 resource "aws_route_table_association" "my_rt_assoc" {
-  subnet_id      = "${aws_subnet.mysubnet-a.id}"
+  count = "${length(var.private_subnet)}"
+
+  subnet_id      = "${element(aws_subnet.mysubnet.*.id,count.index)}"
   route_table_id = "${aws_route_table.rt.id}"
 }
 

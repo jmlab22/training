@@ -8,9 +8,9 @@ output "vpc_cidr_block" {
   value       = "${aws_vpc.main.cidr_block}"
 }
 
-output "private_subnet_a" {
-  description = "Private subnet A"
-  value       = "${aws_subnet.mysubnet-a.cidr_block}"
+output "private_subnet" {
+  description = "Private subnet"
+  value       = "${aws_subnet.mysubnet.*.cidr_block}"
 }
 
 output "Internet-Gateway" {

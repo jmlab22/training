@@ -4,6 +4,17 @@ variable "vpc_cidr_block" {
   default     = "172.23.0.0/16"
 }
 
+variable "myregion" {
+  description = "The Name of my regions"
+  type        = "string"
+  default     = ""
+}
+variable "vpcname" {
+  description = "The Name of my VPC"
+  type        = "string"
+  default     = ""
+}
+
 variable "default_cidr_block" {
   description = "ANY CIDR block"
   type        = "string"
@@ -16,8 +27,14 @@ variable "region" {
   default     = "eu-west-1"
 }
 
-variable "private_subnet_a" {
-  description = "My private subnet in AZ1"
-  type        = "string"
-  default     = "172.23.1.0/24"
+variable "private_subnet" {
+  description = "My private subnet in AZ"
+  type        = "list"
+  default     = ["172.23.1.0/24", "172.23.2.0/24"]
+}
+
+variable "myAZ" {
+  description = "My availibility Zone"
+  type        = "list"
+  default     = ["eu-west-1a", "eu-west-1b"]
 }
