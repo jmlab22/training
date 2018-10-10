@@ -31,14 +31,8 @@ data "aws_vpc" "myvpc" {
 }
 
 ### get subnetID ###
-data "aws_subnet" "mysubnet" {
+data "aws_subnet_ids" "mysubnet" {
   vpc_id = "${data.aws_vpc.myvpc.id}"
-
-  #availability_zone = "eu-west-1a"
-  filter {
-    name   = "tag:Name"
-    values = ["mysubnet.0"]
-  }
 }
 
 ### RESOURCES ###
@@ -73,16 +67,44 @@ resource "aws_security_group" "allow_http" {
 
 ### create EC2 ###
 resource "aws_instance" "web" {
+  count = "${length(data.aws_subnet_ids.mysubnet.ids)}"
+  #count = 2
   ami           = "${data.aws_ami.myubuntu.id}"
   instance_type = "t2.micro"
-  subnet_id     = "${data.aws_subnet.mysubnet.id}"
-
+  subnet_id = "${element(data.aws_subnet_ids.mysubnet.ids,count.index)}"
+  
   tags {
-    Name = "myUbuntu"
+    Name = "myUbuntu-${count.index}" 
   }
 
   user_data                   = "${data.template_file.init.rendered}"
   key_name                    = "myubuntu"
   associate_public_ip_address = true
-  security_groups             = ["${aws_security_group.allow_http.id}"]
+  vpc_security_group_ids      = ["${aws_security_group.allow_http.id}"]
+}
+
+### Create a new load balancer  ###
+
+resource "aws_elb" "jml-elb" {
+  name               = "jml-terraform-elb"
+  #availability_zones = "${var.myAZ}"
+  subnets = ["${data.aws_subnet_ids.mysubnet.ids}"]
+  security_groups = ["${aws_security_group.allow_http.id}"]
+  listener {
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
+  }
+
+  instances                   = ["${aws_instance.web.*.id}"]
+  cross_zone_load_balancing   = true
+  idle_timeout                = 400
+  connection_draining         = true
+  connection_draining_timeout = 400
+
+  tags {
+    Name = "jml-terraform-elb"
+  }
+   
 }

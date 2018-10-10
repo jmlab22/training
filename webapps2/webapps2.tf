@@ -7,5 +7,5 @@ module "webapps" {
   region = "eu-west-1"
   MyVPC  = "prod"
   MyAMI  = "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"
-  myAZ   = "eu-west-1a"
+  myAZ   = ["eu-west-1a", "eu-west-1b"]
 }
